@@ -1,0 +1,802 @@
+# AI Learning Notes
+
+This repository contains my notes and learning resources on **Artificial Intelligence, Large Language Models (LLMs), Transformers, and Generative AI**.
+
+The purpose of this repository is to understand what happens internally when we interact with AI systems such as ChatGPT.
+
+---
+
+## 📚 Topics Covered
+
+* Artificial Intelligence
+* Machine Learning
+* Deep Learning
+* Generative AI
+* Large Language Models (LLMs)
+* Natural Language Processing (NLP)
+* Transformers
+* Tokens and Tokenization
+* Embeddings
+* Attention Mechanism
+* Self-Attention
+* Positional Encoding
+* Training an LLM
+* Inference
+* How ChatGPT Generates Responses
+* Prompt → Token → Transformer → Probability → Output
+
+---
+
+# 1. Artificial Intelligence
+
+### Definition
+
+**Artificial Intelligence (AI)** is a field of computer science that focuses on building systems capable of performing tasks that normally require human intelligence.
+
+Examples:
+
+* Understanding language
+* Recognizing images
+* Making predictions
+* Solving problems
+* Generating text
+* Understanding speech
+
+### Examples
+
+* ChatGPT
+* Voice assistants
+* Recommendation systems
+* Self-driving systems
+* Image recognition systems
+
+---
+
+# 2. Machine Learning
+
+### Definition
+
+**Machine Learning (ML)** is a subset of AI where computers learn patterns from data instead of being explicitly programmed with rules for every situation.
+
+### Basic Process
+
+```text
+Data
+  ↓
+Training
+  ↓
+Learn Patterns
+  ↓
+Model
+  ↓
+Prediction
+```
+
+For example, a model can learn from thousands of emails labeled as:
+
+```text
+Spam
+Not Spam
+```
+
+After training, it can predict whether a new email is spam.
+
+---
+
+# 3. Deep Learning
+
+### Definition
+
+**Deep Learning** is a subset of Machine Learning that uses neural networks with multiple layers to learn complex patterns.
+
+```text
+AI
+└── Machine Learning
+    └── Deep Learning
+```
+
+Deep learning is widely used in:
+
+* Computer Vision
+* Speech Recognition
+* NLP
+* Generative AI
+* LLMs
+
+---
+
+# 4. Generative AI
+
+### Definition
+
+**Generative AI** refers to AI systems that can generate new content based on patterns learned from training data.
+
+It can generate:
+
+* Text
+* Images
+* Audio
+* Video
+* Code
+
+Examples:
+
+* ChatGPT → Text
+* Image generation models → Images
+* Code generation models → Code
+
+---
+
+# 5. Large Language Model (LLM)
+
+### Definition
+
+A **Large Language Model (LLM)** is a neural network trained on a very large amount of text data to understand and generate human-like language.
+
+Examples include models used by:
+
+* ChatGPT
+* Claude
+* Gemini
+* Llama
+
+An LLM learns statistical patterns between tokens.
+
+For example:
+
+```text
+The sun rises in the ___
+```
+
+The model learns that:
+
+```text
+east
+```
+
+has a high probability of occurring in this context.
+
+### Important Point
+
+An LLM does not simply store answers like a traditional database.
+
+It learns patterns and relationships in the training data and uses those learned parameters to predict the next token.
+
+---
+
+# 6. How ChatGPT Works — High-Level Process
+
+When a user sends a message:
+
+```text
+User Prompt
+     ↓
+Tokenization
+     ↓
+Token IDs
+     ↓
+Embeddings
+     ↓
+Transformer
+     ↓
+Attention Mechanism
+     ↓
+Next Token Probabilities
+     ↓
+Token Selection
+     ↓
+More Tokens Generated
+     ↓
+Final Response
+```
+
+---
+
+# 7. Tokenization
+
+LLMs do not directly process complete words or sentences.
+
+The input text is divided into smaller units called **tokens**.
+
+For example:
+
+```text
+"I love artificial intelligence"
+```
+
+may be broken into tokens representing parts of the words.
+
+Conceptually:
+
+```text
+Text
+ ↓
+Tokens
+ ↓
+Token IDs
+```
+
+The exact tokenization depends on the tokenizer used by the model.
+
+---
+
+# 8. Token IDs
+
+After tokenization, tokens are converted into numerical IDs.
+
+Conceptually:
+
+```text
+"AI"
+ ↓
+Token
+ ↓
+Token ID
+ ↓
+12345
+```
+
+The neural network works with numerical representations rather than raw text.
+
+---
+
+# 9. Embeddings
+
+### Definition
+
+An **embedding** is a numerical vector representation of a token or piece of information.
+
+Example:
+
+```text
+Token
+ ↓
+Embedding
+ ↓
+[0.21, -0.53, 0.72, ...]
+```
+
+Embeddings allow the neural network to represent relationships between tokens mathematically.
+
+For example, words with related meanings tend to have related representations.
+
+---
+
+# 10. Transformer
+
+### Definition
+
+A **Transformer** is a neural network architecture designed to process sequences using attention mechanisms.
+
+The Transformer architecture was introduced in the 2017 research paper:
+
+> "Attention Is All You Need"
+
+Transformers became the foundation of modern LLMs.
+
+### Main Components
+
+A Transformer can contain components such as:
+
+```text
+Input
+ ↓
+Token Embeddings
+ ↓
+Positional Information
+ ↓
+Self-Attention
+ ↓
+Feed Forward Network
+ ↓
+Normalization
+ ↓
+Transformer Layer
+ ↓
+...
+ ↓
+Output
+```
+
+Modern LLM architectures can vary, so not every model uses exactly the same implementation.
+
+---
+
+# 11. Attention Mechanism
+
+### Definition
+
+**Attention** allows the model to determine which parts of the input are important when processing a particular token.
+
+Consider:
+
+```text
+The cat sat on the mat because it was tired.
+```
+
+To understand what "it" refers to, the model needs to consider other words in the sentence.
+
+Attention helps the model determine relationships between tokens.
+
+---
+
+# 12. Self-Attention
+
+**Self-attention** allows tokens in a sequence to interact with other tokens in the same sequence.
+
+The mechanism uses three important representations:
+
+```text
+Query (Q)
+Key (K)
+Value (V)
+```
+
+The basic attention calculation is:
+
+```text
+Attention(Q,K,V)
+=
+softmax(QKᵀ / √dₖ)V
+```
+
+### Meaning
+
+* **Query** → What information am I looking for?
+* **Key** → What information do I contain?
+* **Value** → What information should I provide?
+
+The attention mechanism calculates how strongly different tokens should influence each other.
+
+---
+
+# 13. Multi-Head Attention
+
+Instead of using only one attention operation, Transformers can use multiple attention heads.
+
+```text
+                Input
+                  ↓
+       ┌──────────┼──────────┐
+       ↓          ↓          ↓
+   Head 1      Head 2      Head 3
+       ↓          ↓          ↓
+       └──────────┼──────────┘
+                  ↓
+             Concatenate
+                  ↓
+               Output
+```
+
+Different attention heads can learn different types of relationships between tokens.
+
+---
+
+# 14. Positional Information
+
+A sequence has an order.
+
+For example:
+
+```text
+Dog bites man
+```
+
+and
+
+```text
+Man bites dog
+```
+
+contain the same words but have different meanings.
+
+Therefore, Transformer models need information about token positions.
+
+This is handled using **positional representations/encodings**, depending on the architecture.
+
+---
+
+# 15. Transformer Layer
+
+A Transformer model contains many repeated layers.
+
+Conceptually:
+
+```text
+Input
+ ↓
+Transformer Layer
+ ↓
+Transformer Layer
+ ↓
+Transformer Layer
+ ↓
+...
+ ↓
+Transformer Layer
+ ↓
+Output
+```
+
+Each layer transforms the representation of the input.
+
+With many layers, the model can learn increasingly complex patterns.
+
+---
+
+# 16. Parameters
+
+### Definition
+
+**Parameters** are numerical values learned by a neural network during training.
+
+They are commonly called:
+
+* Weights
+* Biases
+
+A large language model can contain billions of parameters.
+
+During training, these parameters are adjusted to reduce the model's prediction error.
+
+---
+
+# 17. Training an LLM
+
+A simplified training process looks like:
+
+```text
+Large Dataset
+      ↓
+Tokenization
+      ↓
+Input Tokens
+      ↓
+Transformer
+      ↓
+Prediction
+      ↓
+Compare With Target
+      ↓
+Calculate Loss
+      ↓
+Backpropagation
+      ↓
+Update Parameters
+      ↓
+Repeat
+```
+
+This process is repeated over very large amounts of training data.
+
+---
+
+# 18. Loss Function
+
+The model needs a way to measure how wrong its prediction was.
+
+This measurement is called **loss**.
+
+Conceptually:
+
+```text
+Prediction
+     ↓
+Compare with target
+     ↓
+Loss
+```
+
+A lower loss generally means the model's predictions are closer to the training targets for the measured objective.
+
+---
+
+# 19. Backpropagation
+
+**Backpropagation** is the process used to calculate how model parameters contributed to the error.
+
+The gradients are then used by an optimization algorithm to update the parameters.
+
+Simplified:
+
+```text
+Prediction
+    ↓
+Loss
+    ↓
+Gradients
+    ↓
+Parameter Updates
+```
+
+---
+
+# 20. Inference
+
+### Definition
+
+**Inference** is the process of using a trained model to generate an output for a new input.
+
+Training:
+
+```text
+Data → Learn Parameters
+```
+
+Inference:
+
+```text
+Prompt → Trained Model → Output
+```
+
+When you send a message to ChatGPT, the model is performing inference.
+
+---
+
+# 21. How ChatGPT Generates a Response
+
+Suppose the user enters:
+
+```text
+What is AI?
+```
+
+A simplified process is:
+
+```text
+"What is AI?"
+      ↓
+Tokenization
+      ↓
+Token IDs
+      ↓
+Embeddings
+      ↓
+Transformer Layers
+      ↓
+Contextual Representations
+      ↓
+Output Probabilities
+      ↓
+Select Next Token
+      ↓
+Generate Next Token
+      ↓
+Repeat
+```
+
+The model generates the response **token by token**.
+
+For example:
+
+```text
+AI
+→ is
+→ a
+→ field
+→ of
+→ computer
+→ science
+→ ...
+```
+
+The actual generation process is more complex than this simplified representation.
+
+---
+
+# 22. Next-Token Prediction
+
+A fundamental concept behind autoregressive language models is **next-token prediction**.
+
+Given:
+
+```text
+The capital of France is
+```
+
+the model assigns probabilities to possible next tokens.
+
+Conceptually:
+
+```text
+Paris       → 0.92
+London      → 0.01
+Berlin      → 0.01
+...
+```
+
+The generation process uses these probabilities to select the next token according to the model's decoding strategy.
+
+Then the new token becomes part of the context for predicting the following token.
+
+---
+
+# 23. Temperature
+
+**Temperature** controls how much randomness is used during token generation.
+
+Conceptually:
+
+### Lower temperature
+
+More predictable outputs.
+
+```text
+High probability tokens
+        ↓
+More deterministic response
+```
+
+### Higher temperature
+
+More variation in generated outputs.
+
+```text
+More probability distribution
+        ↓
+More diverse response
+```
+
+Temperature is one of several decoding controls and does not change the model's learned parameters.
+
+---
+
+# 24. Context Window
+
+### Definition
+
+The **context window** is the amount of input/output token context that a model can process within a particular interaction.
+
+Conceptually:
+
+```text
+Previous conversation
+        +
+Current prompt
+        ↓
+Context Window
+        ↓
+Model
+        ↓
+Response
+```
+
+A larger context window allows a model to consider more tokens at once, subject to the model's limits.
+
+---
+
+# 25. Hallucination
+
+### Definition
+
+An **AI hallucination** occurs when a model generates information that is incorrect, unsupported, or fabricated while presenting it as an answer.
+
+This can happen because language models generate outputs based on learned patterns and probabilities rather than having a built-in guarantee that every generated statement is factually correct.
+
+Therefore:
+
+```text
+LLM Output ≠ Guaranteed Truth
+```
+
+Important information should be verified using reliable sources.
+
+---
+
+# 26. Simple Mental Model
+
+The overall concept can be remembered as:
+
+```text
+                USER PROMPT
+                     ↓
+                TOKENIZATION
+                     ↓
+                  TOKENS
+                     ↓
+                TOKEN IDs
+                     ↓
+                EMBEDDINGS
+                     ↓
+              TRANSFORMER
+                     ↓
+              SELF-ATTENTION
+                     ↓
+             CONTEXTUAL DATA
+                     ↓
+          NEXT TOKEN PROBABILITIES
+                     ↓
+             TOKEN SELECTION
+                     ↓
+          REPEAT UNTIL COMPLETE
+                     ↓
+                AI RESPONSE
+```
+
+---
+
+# 27. Key Terms
+
+| Term            | Meaning                                                |
+| --------------- | ------------------------------------------------------ |
+| AI              | Machines performing tasks associated with intelligence |
+| ML              | Learning patterns from data                            |
+| Deep Learning   | ML using multi-layer neural networks                   |
+| Generative AI   | AI that generates new content                          |
+| LLM             | Large neural network trained for language tasks        |
+| Token           | Small unit of text processed by an LLM                 |
+| Embedding       | Numerical representation of information                |
+| Transformer     | Neural network architecture using attention            |
+| Attention       | Mechanism for weighting relevant information           |
+| Self-Attention  | Attention between tokens within a sequence             |
+| Parameter       | Learned numerical value in a neural network            |
+| Training        | Learning parameters from data                          |
+| Inference       | Using a trained model to generate output               |
+| Loss            | Measurement of prediction error                        |
+| Backpropagation | Computing gradients used to update parameters          |
+| Context Window  | Token context available to the model                   |
+| Hallucination   | Incorrect or unsupported generated information         |
+
+---
+
+# 🔬 Today's Learning Summary
+
+Today I learned how modern language models work internally, from **text input to generated output**.
+
+The main flow I learned is:
+
+```text
+Prompt
+ ↓
+Tokenization
+ ↓
+Token IDs
+ ↓
+Embeddings
+ ↓
+Transformer
+ ↓
+Self-Attention
+ ↓
+Contextual Representation
+ ↓
+Next-Token Probability
+ ↓
+Token Generation
+ ↓
+Final Response
+```
+
+The key concept is that an LLM learns patterns from large amounts of data during training and uses those learned parameters during inference to predict and generate tokens.
+
+---
+
+## 📌 Learning Roadmap
+
+Future topics I plan to explore:
+
+* Neural Networks
+* Gradient Descent
+* Backpropagation in detail
+* CNN
+* RNN
+* LSTM
+* Transformer Architecture in depth
+* Attention implementation
+* Fine-Tuning
+* Transfer Learning
+* Prompt Engineering
+* RAG
+* Vector Databases
+* AI Agents
+* Function Calling / Tool Use
+* Model Evaluation
+* AI Safety and Responsible AI
+
+---
+
+## 📖 Reference
+
+* Vaswani et al. — *Attention Is All You Need* (2017)
+* Official documentation and technical resources from major AI model providers
+* Personal learning notes and experiments
