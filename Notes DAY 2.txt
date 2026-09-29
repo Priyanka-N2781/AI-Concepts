@@ -1,0 +1,943 @@
+# System Design – Learning Notes
+
+## 1. What is System Design?
+
+System Design is the process of planning how a software system will be structured, how its components will communicate, how data will be stored, and how the system will handle users, traffic, failures, and growth.
+
+A system design describes:
+
+* Components of the system
+* Communication between components
+* Data storage
+* APIs
+* Scalability
+* Reliability
+* Performance
+* Security
+* Fault tolerance
+
+### Simple Example
+
+For an online shopping application:
+
+```text
+User
+  |
+  v
+Frontend
+  |
+  v
+Backend / API Server
+  |
+  +------> Database
+  |
+  +------> Cache
+  |
+  +------> Payment Service
+  |
+  +------> Notification Service
+```
+
+---
+
+# 2. Why is System Design Important?
+
+A small application may work with a few users, but problems can occur when millions of users start accessing it.
+
+System design helps us answer questions such as:
+
+* How can the system handle millions of users?
+* How can we reduce response time?
+* What happens if a server fails?
+* How should data be stored?
+* How can multiple servers share the workload?
+* How can the system remain available during failures?
+* How can we scale the application?
+
+---
+
+# 3. Functional Requirements
+
+Functional requirements describe **what the system should do**.
+
+For example, for a food delivery application:
+
+* User can register and log in
+* User can search restaurants
+* User can view menus
+* User can place an order
+* User can make payments
+* User can track orders
+* User can receive notifications
+
+### Example
+
+```text
+Functional Requirement:
+Users should be able to place an order.
+```
+
+---
+
+# 4. Non-Functional Requirements
+
+Non-functional requirements describe **how well the system should work**.
+
+Examples:
+
+* Scalability
+* Availability
+* Reliability
+* Performance
+* Security
+* Maintainability
+* Fault tolerance
+
+### Example
+
+```text
+The system should support 1 million users
+and provide responses within 200 milliseconds.
+```
+
+---
+
+# 5. Scalability
+
+Scalability is the ability of a system to handle increasing traffic and workload.
+
+There are two main types:
+
+## Vertical Scaling
+
+Increasing the resources of a single server.
+
+```text
+Before:
+
+Server
+4 GB RAM
+2 CPU
+
+
+After:
+
+Server
+16 GB RAM
+8 CPU
+```
+
+Advantages:
+
+* Simple to implement
+* No major architectural changes
+
+Disadvantages:
+
+* Hardware has a limit
+* Can become expensive
+* Single server can become a bottleneck
+
+---
+
+## Horizontal Scaling
+
+Adding more servers to distribute the workload.
+
+```text
+             Load Balancer
+              /    |    \
+             /     |     \
+        Server 1 Server 2 Server 3
+```
+
+Advantages:
+
+* Handles large traffic
+* Better fault tolerance
+* Easy to add more servers
+
+This is commonly used in large-scale systems.
+
+---
+
+# 6. Load Balancer
+
+A Load Balancer distributes incoming requests across multiple servers.
+
+```text
+             Users
+                |
+                v
+          Load Balancer
+          /     |      \
+         v      v       v
+      Server1 Server2 Server3
+```
+
+Instead of sending every request to one server, the load balancer distributes requests.
+
+### Common Load Balancing Methods
+
+* Round Robin
+* Least Connections
+* IP Hash
+* Weighted Round Robin
+
+### Round Robin
+
+Requests are distributed sequentially.
+
+```text
+Request 1 → Server 1
+Request 2 → Server 2
+Request 3 → Server 3
+Request 4 → Server 1
+```
+
+---
+
+# 7. Client-Server Architecture
+
+The client sends requests and the server processes them.
+
+```text
+Client
+  |
+  | HTTP Request
+  v
+Server
+  |
+  | Response
+  v
+Client
+```
+
+Example:
+
+```text
+Browser → GET /users → Backend
+Browser ← User Data ← Backend
+```
+
+---
+
+# 8. API
+
+API stands for **Application Programming Interface**.
+
+It allows different software components to communicate with each other.
+
+Example:
+
+```text
+GET /users
+POST /users
+GET /users/10
+PUT /users/10
+DELETE /users/10
+```
+
+### REST API
+
+REST is a commonly used architectural style for building web APIs.
+
+Common HTTP methods:
+
+| Method | Purpose               |
+| ------ | --------------------- |
+| GET    | Retrieve data         |
+| POST   | Create data           |
+| PUT    | Update data           |
+| PATCH  | Partially update data |
+| DELETE | Delete data           |
+
+---
+
+# 9. Database
+
+A database stores application data.
+
+Two major categories are:
+
+## SQL Databases
+
+Examples:
+
+* PostgreSQL
+* MySQL
+* Oracle
+* SQL Server
+
+Data is generally stored in tables.
+
+```text
+Users
+
+id | name | email
+---|------|------
+1  | John | john@gmail.com
+2  | Alex | alex@gmail.com
+```
+
+SQL databases are useful when:
+
+* Data relationships are important
+* Transactions are required
+* Structured data is used
+
+---
+
+## NoSQL Databases
+
+Examples:
+
+* MongoDB
+* Cassandra
+* DynamoDB
+* Redis
+
+NoSQL databases are often used when applications need flexible data models or very large-scale distributed storage.
+
+---
+
+# 10. Database Indexing
+
+An index helps the database find data faster.
+
+Without an index:
+
+```text
+Database
+   |
+   v
+Check many rows
+   |
+   v
+Find required row
+```
+
+With an index:
+
+```text
+Query
+  |
+  v
+Index
+  |
+  v
+Required Row
+```
+
+Example:
+
+```sql
+CREATE INDEX idx_email
+ON users(email);
+```
+
+Indexing can improve read performance, but indexes also require additional storage and can make writes more expensive.
+
+---
+
+# 11. Caching
+
+A cache stores frequently accessed data in faster storage so that repeated requests can be served more quickly.
+
+Example:
+
+```text
+User
+ |
+ v
+Application
+ |
+ +----> Cache ----> Data available
+ |
+ +----> Database
+```
+
+Popular caching technologies include:
+
+* Redis
+* Memcached
+
+### Example
+
+Without cache:
+
+```text
+User → Server → Database
+```
+
+With cache:
+
+```text
+User → Server → Cache
+                  |
+             Data found
+```
+
+If the data is not available in the cache, the application can retrieve it from the database and place it in the cache.
+
+---
+
+# 12. Cache Hit and Cache Miss
+
+### Cache Hit
+
+Requested data exists in the cache.
+
+```text
+Request
+   |
+   v
+Cache
+   |
+   v
+Data Found
+```
+
+### Cache Miss
+
+Requested data does not exist in the cache.
+
+```text
+Request
+   |
+   v
+Cache
+   |
+   X
+Not Found
+   |
+   v
+Database
+```
+
+---
+
+# 13. Database Replication
+
+Replication means maintaining copies of data on multiple database servers.
+
+Example:
+
+```text
+             Primary DB
+             /        \
+            /          \
+           v            v
+      Replica 1      Replica 2
+```
+
+The primary database can handle writes while replicas can handle read requests.
+
+Benefits:
+
+* Improved read performance
+* Higher availability
+* Backup/redundancy
+
+---
+
+# 14. Database Sharding
+
+Sharding means dividing a large database into smaller parts called shards.
+
+Example:
+
+```text
+Users 1–1,000,000
+        |
+        v
+-------------------------
+|          |            |
+Shard 1    Shard 2      Shard 3
+1–333K     334–666K     667K–1M
+```
+
+Sharding helps distribute large amounts of data across multiple servers.
+
+---
+
+# 15. Message Queue
+
+A message queue allows services to communicate asynchronously.
+
+Examples:
+
+* Apache Kafka
+* RabbitMQ
+* Amazon SQS
+
+Example:
+
+```text
+Order Service
+      |
+      v
+  Message Queue
+      |
+      v
+Notification Service
+```
+
+Instead of waiting for the notification service to complete immediately, the order service can place a message in the queue.
+
+This helps reduce dependency between services.
+
+---
+
+# 16. Microservices
+
+Microservices architecture divides an application into smaller independent services.
+
+Example:
+
+```text
+                 API Gateway
+                     |
+       +-------------+-------------+
+       |             |             |
+       v             v             v
+ User Service   Order Service   Payment Service
+       |             |             |
+       v             v             v
+    Database      Database      Database
+```
+
+Each service focuses on a specific business function.
+
+Advantages:
+
+* Independent deployment
+* Independent scaling
+* Smaller codebases
+* Failure isolation
+
+Disadvantages:
+
+* More complex communication
+* Distributed system problems
+* Monitoring becomes more difficult
+
+---
+
+# 17. Monolithic Architecture
+
+In a monolithic architecture, the application is built as a single application.
+
+```text
+          Application
+   +-----------------------+
+   | User                  |
+   | Order                 |
+   | Payment               |
+   | Notification          |
+   +-----------------------+
+             |
+             v
+          Database
+```
+
+Advantages:
+
+* Simple to develop initially
+* Easy to deploy
+* Easier debugging for small systems
+
+Disadvantages:
+
+* Difficult to scale individual components
+* Large codebase
+* One failure can affect the entire application
+
+---
+
+# 18. Monolith vs Microservices
+
+| Feature       | Monolith                  | Microservices         |
+| ------------- | ------------------------- | --------------------- |
+| Architecture  | Single application        | Multiple services     |
+| Deployment    | Usually together          | Independently         |
+| Scaling       | Entire application        | Individual services   |
+| Complexity    | Lower initially           | Higher                |
+| Development   | Simpler for small systems | More complex          |
+| Communication | Internal function calls   | Network communication |
+
+---
+
+# 19. CDN
+
+CDN stands for **Content Delivery Network**.
+
+A CDN stores and delivers static content from servers located closer to users.
+
+Static content includes:
+
+* Images
+* Videos
+* CSS
+* JavaScript
+* Fonts
+
+Example:
+
+```text
+User
+ |
+ v
+CDN
+ |
+ +----> Nearby Edge Server
+ |
+ v
+Origin Server
+```
+
+Benefits:
+
+* Lower latency
+* Faster content delivery
+* Reduced load on the main server
+
+---
+
+# 20. DNS
+
+DNS stands for **Domain Name System**.
+
+It converts domain names into IP addresses.
+
+Example:
+
+```text
+google.com
+     |
+     v
+DNS
+     |
+     v
+IP Address
+```
+
+Instead of remembering an IP address, users can use a domain name.
+
+---
+
+# 21. Latency
+
+Latency is the amount of time taken for a request to travel from the client to the server and receive a response.
+
+```text
+Client
+  |
+  | Request
+  |---------->
+  |
+ Server
+  |
+  | Response
+  |<----------
+  |
+Client
+```
+
+Lower latency generally means faster response.
+
+---
+
+# 22. Throughput
+
+Throughput is the amount of work a system can process in a given amount of time.
+
+For example:
+
+```text
+1000 requests / second
+```
+
+means the system can process approximately 1000 requests per second.
+
+---
+
+# 23. Availability
+
+Availability describes how often a system is operational and accessible.
+
+A highly available system should continue working even when some components fail.
+
+Example:
+
+```text
+Server 1 ❌
+    |
+Load Balancer
+    |
+Server 2 ✅
+```
+
+The load balancer can redirect traffic to a healthy server.
+
+---
+
+# 24. Fault Tolerance
+
+Fault tolerance means the system can continue operating even when some components fail.
+
+Example:
+
+```text
+Server 1 ❌
+Server 2 ✅
+Server 3 ✅
+```
+
+The system can continue serving users through Server 2 and Server 3.
+
+---
+
+# 25. Single Point of Failure
+
+A Single Point of Failure (SPOF) is a component whose failure can cause the entire system or an important part of it to fail.
+
+Example:
+
+```text
+Users
+  |
+  v
+Single Server ❌
+  |
+Everything stops
+```
+
+A better design can use multiple servers:
+
+```text
+             Load Balancer
+             /           \
+        Server 1        Server 2
+```
+
+---
+
+# 26. CAP Theorem
+
+CAP theorem describes a trade-off in distributed systems.
+
+CAP stands for:
+
+* **Consistency**
+* **Availability**
+* **Partition Tolerance**
+
+### Consistency
+
+Every read receives the latest available write.
+
+### Availability
+
+Every request receives a response.
+
+### Partition Tolerance
+
+The system continues operating even when communication between parts of the system is disrupted.
+
+A distributed system must tolerate network partitions, so system designs often involve trade-offs between consistency and availability during a partition.
+
+---
+
+# 27. Authentication vs Authorization
+
+### Authentication
+
+Authentication verifies **who the user is**.
+
+Example:
+
+```text
+Username + Password
+        |
+        v
+Authentication
+        |
+        v
+User Identity Verified
+```
+
+### Authorization
+
+Authorization determines **what the user is allowed to do**.
+
+Example:
+
+```text
+Admin → Delete User
+Normal User → Cannot Delete User
+```
+
+---
+
+# 28. Rate Limiting
+
+Rate limiting controls how many requests a user or client can make within a certain period.
+
+Example:
+
+```text
+100 requests / minute
+```
+
+If the client exceeds the limit:
+
+```text
+Request → Rate Limiter → Rejected
+```
+
+Rate limiting helps protect systems from excessive traffic and abuse.
+
+---
+
+# 29. System Design Process
+
+A general system design process can be:
+
+```text
+1. Understand Requirements
+          ↓
+2. Identify Functional Requirements
+          ↓
+3. Identify Non-Functional Requirements
+          ↓
+4. Estimate Scale
+          ↓
+5. Design High-Level Architecture
+          ↓
+6. Design APIs
+          ↓
+7. Choose Database
+          ↓
+8. Add Cache / Load Balancer
+          ↓
+9. Handle Failures
+          ↓
+10. Discuss Scalability and Trade-offs
+```
+
+---
+
+# 30. High-Level Design Example – URL Shortener
+
+A URL shortener converts a long URL into a short URL.
+
+Example:
+
+```text
+Long URL
+https://example.com/very/long/url
+              |
+              v
+       URL Shortener
+              |
+              v
+         abc123
+```
+
+When a user accesses:
+
+```text
+shorturl.com/abc123
+```
+
+the system finds the original URL and redirects the user.
+
+### Basic Architecture
+
+```text
+User
+ |
+ v
+Load Balancer
+ |
+ v
+URL Service
+ |
+ +------> Cache
+ |
+ +------> Database
+```
+
+### Main Components
+
+* Client
+* Load Balancer
+* URL Service
+* Cache
+* Database
+
+---
+
+# 31. Important System Design Concepts Learned
+
+The major concepts I learned are:
+
+* System Design
+* Functional Requirements
+* Non-Functional Requirements
+* Scalability
+* Vertical Scaling
+* Horizontal Scaling
+* Load Balancing
+* APIs
+* REST
+* SQL Databases
+* NoSQL Databases
+* Database Indexing
+* Database Replication
+* Database Sharding
+* Caching
+* Cache Hit
+* Cache Miss
+* Message Queues
+* Microservices
+* Monolithic Architecture
+* CDN
+* DNS
+* Latency
+* Throughput
+* Availability
+* Fault Tolerance
+* Single Point of Failure
+* CAP Theorem
+* Authentication
+* Authorization
+* Rate Limiting
+* High-Level Design
+
+---
+
+# 32. Key Takeaway
+
+System Design is not just about drawing an architecture diagram. It is about understanding **requirements, scale, performance, reliability, data storage, communication, failures, and trade-offs** and then designing a system that can handle those requirements effectively.
+
+The main goal is to understand:
+
+```text
+Requirements
+     ↓
+Architecture
+     ↓
+Components
+     ↓
+Data Flow
+     ↓
+Scalability
+     ↓
+Reliability
+     ↓
+Performance
+```
+
+This learning helped me understand how large-scale applications are structured and how different components such as servers, databases, caches, load balancers, queues, and services work together.
